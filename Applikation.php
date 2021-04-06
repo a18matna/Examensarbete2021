@@ -23,13 +23,13 @@ $conn = $database->getConnection();
         <input type='submit' value='hämta alla bokningar'>
     </form>
     <h1> Sök efter Form</h1>
-    <form action='formsearch-service.php' method='get'>
-        <input type='search' Placeholder='sök efter form' value=''>
+    <form action='formsearch-service.php' method='post'>
+        <input type='search' Placeholder='sök efter form' value='' name='user_search'>
         <input type='submit' value='sök'>
     </form>
     <h1> Sök efter Bokning</h1>
-    <form action='bokningsearch-service.php' method='get'>
-        <input type='search' Placeholder='sök efter bokning' value=''>
+    <form action='bokningsearch-service.php' method='post'>
+        <input type='search' Placeholder='sök efter bokning' value='' name='user_boksearch'>
         <input type='submit' value='sök'>
     </form>
 </body>
