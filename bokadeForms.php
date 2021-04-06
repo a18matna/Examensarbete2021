@@ -5,7 +5,7 @@ include_once 'database.php';
 //Create database connection
 $database = new Database();
 $conn = $database->getConnection();
-$sql = "SELECT * FROM forms";
+$sql = "SELECT * FROM bokningar";
 $result = $conn->query($sql);
 $row = $result ->fetchall(PDO::FETCH_ASSOC);
 
@@ -23,15 +23,13 @@ $row = $result ->fetchall(PDO::FETCH_ASSOC);
 ?>
     <div id='formdiv'>
         <table>
-            <th> olika former </th>
+            <th> Aktuella bokningar </th>
             <?php 
                 foreach ($row as $data){
             ?>
             <tr>
+                <td><?= $data['idBokning']?></td>
                 <td><?= $data['idForms']?></td>
-                <td><?= $data['typeForms']?></td>
-                <td><?= $data['colorForms']?></td>
-                <td><?= $data['sizeForms']?></td>
             </tr>
             <?php
             }

@@ -1,3 +1,10 @@
+<?php
+include_once 'database.php';
+
+//Create database connection
+$database = new Database();
+$conn = $database->getConnection();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

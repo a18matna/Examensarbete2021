@@ -1,5 +1,9 @@
 <?php
+include_once 'database.php';
 
+//Create database connection
+$database = new Database();
+$conn = $database->getConnection();
 ?>
 <!DOCTYPE html>
 <html lang="sv">
@@ -15,8 +19,8 @@
         <input type='submit' value='hämta alla former'>
     </form>
     <h1> Hämta Bokningar</h1>
-    <form action='Bokning-service.php' method='get'> 
-        <input type='submit' value='hämta alla former'>
+    <form action='bokadeForms.php' method='get'> 
+        <input type='submit' value='hämta alla bokningar'>
     </form>
     <h1> Sök efter Form</h1>
     <form action='formsearch-service.php' method='get'>
@@ -25,7 +29,7 @@
     </form>
     <h1> Sök efter Bokning</h1>
     <form action='bokningsearch-service.php' method='get'>
-        <input type='search' Placeholder='sök efter form' value=''>
+        <input type='search' Placeholder='sök efter bokning' value=''>
         <input type='submit' value='sök'>
     </form>
 </body>
