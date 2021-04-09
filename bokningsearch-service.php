@@ -4,7 +4,7 @@ include_once 'database.php';
 //Create database connection
 $database = new Database();
 $conn = $database->getConnection();
-$sql = "SELECT * FROM forms where '".$_POST['user_boksearch']."' in (idForms, typeForms, colorForms, sizeForms) ";
+$sql = "SELECT * FROM bokningar where '".$_GET['user_boksearch']."' in (idForms) ";
 $result = $conn->query($sql);
 $row = $result ->fetchall(PDO::FETCH_ASSOC);
 
@@ -23,17 +23,16 @@ $row = $result ->fetchall(PDO::FETCH_ASSOC);
             <th> Sök resultat </th>
             </tr>
             <tr>
-            <th> ID </th><th> TYP </th> <th> FÄRG </th> <th> STORLEK </th>
+            <th> Boknings-ID </th><th> Form-ID </th>
             </tr>
             <?php 
         
             foreach ($row as $data){
             ?>
             <tr>
+                <td><?= $data['idBokning']?></td>
                 <td><?= $data['idForms']?></td>
-                <td><?= $data['typeForms']?></td>
-                <td><?= $data['colorForms']?></td>
-                <td><?= $data['sizeForms']?></td>
+
             </tr>
             <?php
             }
