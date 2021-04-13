@@ -30,9 +30,11 @@ $row = $result ->fetchall(PDO::FETCH_ASSOC);
             foreach ($row as $data){
             ?>
             <tr>
-                <td><?= $data['idBokning']?></td>
+                <form action='Avbokning-service.php' method=post>
+                <td><input type='text' name='avbokningsobj' value=<?=$data['idBokning']?> readonly ></td>
                 <td><?= $data['idForms']?></td>
-
+                <td><input type='submit' value='avboka'></td>
+                </form>
             </tr>
             <?php
             }
