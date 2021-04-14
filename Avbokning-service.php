@@ -4,24 +4,11 @@ include_once 'database.php';
 $database = new Database();
 $conn = $database->getConnection();
 $query = $conn->prepare("DELETE FROM bokningar WHERE idBokning = :idBokning");
-            $query->bindParam(':idBokning',$_POST['avbokningsobj']);
+            $query->bindParam(':idBokning',$_GET['avbokningsobj']);
             
           
-            if(!$query->execute()) {
-           
+            if($query->execute()) {
+                echo json_encode('avbokning OK');
             }
             
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<form action='bokadeForms.php'><input type='submit' value='bokningar'></form>
-</body>
-</html>
