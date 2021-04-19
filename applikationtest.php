@@ -8,51 +8,87 @@
 </head>
 <body>
 <?php
+session_start();
+$SID= session_id();
+print_r (session_ID());
+if(isset($_POST['sessionstart'])){
+
+
+}
+if(isset($_POST['sessionstopp'])){
+    //--- Skapar nytt session ID och tar bort eventuellt lagrad session data ---
+    session_regenerate_id();
+    session_destroy();
+    print_r (session_ID());
+}
+echo '<form action="applikationtest.php" method=post>';
+echo '<input type="submit" name="visaFormer" value="Hämta alla former">';
+echo '<input type="submit" name="visaBokningar" value="Hämta alla bokningar">';
+echo '<input type="submit" name="sessionstart" value="starta">';
+echo '<input type="submit" name="sessionstopp" value="stoppa">';
+echo '</form>';
+echo '<form action="applikationtest.php" method=post>';
+echo '<input type="search" name="user_formsearch" value="" placeholder="sök efter former">';
+echo '<input type="submit" value="sök">';
+echo '</form>';
+echo '<form action="applikationtest.php" method=post>';
+echo '<input type="search" name="user_boksearch" value="" placeholder="sök efter bokningar">';
+echo '<input type="submit" value="sök">';
+echo '</form>';
+
 //---  Kollar om bokningsobj är satt och Skickar http request till bokning-service  ---
-//print_r($_POST);
 if(isset($_POST['bokningsobj'])){
     $url="http://localhost/Bokning-service.php?bokningsobj=".$_POST['bokningsobj'];
     $jsontext = file_get_contents($url);
-  //  print_r($_POST);
-   // echo $url.' '.$jsontext;
+
+    //--- Loggar Bokningen med sessionID och handling ---
+    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+    $jsontext2 =file_get_contents($url2);    
 }
 
 //--- Hämtar Formerna från formservice ---
-echo '<div style= "display:inline">';
-$url="http://localhost/form-service.php";
-$jsontext = file_get_contents($url);
-$rows = json_decode($jsontext);
+if (isset($_POST['visaFormer'])){
+    $url="http://localhost/form-service.php";
+    $jsontext = file_get_contents($url);
+    $rows = json_decode($jsontext);
 
-//--- Ekar ut resultaten från formservice och itererar tablerows ---
-echo '<table>';
-foreach($rows as $row){
-    echo "<tr>
-        <form action='applikationtest.php' method=post>
-            <td><input type='text' name='bokningsobj' value='$row->idForms' readonly ></td>
-            <td>$row->typeForms</td>
-            <td>$row->sizeForms</td>
-            <td>$row->colorForms</td>
-            <td><input type='submit' value='boka'></td>
-        </form>
-    </tr>";
-        
+    //--- Loggar Bokningen med sessionID och handling ---
+    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+    $jsontext2 =file_get_contents($url2);
+
+    //--- Ekar ut resultaten från formservice och itererar tablerows ---
+    echo '<div style= "display:inline">';
+    echo '<table>';
+    foreach($rows as $row){
+        echo "<tr>
+            <form action='applikationtest.php' method=post>
+                <td><input type='text' name='bokningsobj' value='$row->idForms' readonly ></td>
+                <td>$row->typeForms</td>
+                <td>$row->sizeForms</td>
+                <td>$row->colorForms</td>
+                <td><input type='submit' value='boka'></td>
+            </form>
+        </tr>";
+            
+    }
+    echo '</table>';
+    echo '</div>';
 }
-echo '</table>';
-echo '</div>';
 // Tillgängliga former tabell slut
 
-echo '<div style= "display:inline-block">';
-echo '<form action="applikationtest.php" method=post>
-    <input type="search" name="user_formsearch" value="" placeholder="sök efter former">
-    <input type="submit" value="sök">
-    </form>';
+
 //---  Kollar om user_formsearch är satt och Skickar http request till formsearch-service  ---
 if (isset($_POST['user_formsearch'])){
     $url="http://localhost/formsearch-service.php?user_formsearch=".$_POST['user_formsearch'];
     $jsontext = file_get_contents($url);
     $rows = json_decode($jsontext);
 
-//--- Ekar ut resultaten från formsearch-service och itererar tablerows ---    
+    //--- Loggar Bokningen med sessionID och handling ---
+    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+    $jsontext2 =file_get_contents($url2);
+
+    //--- Ekar ut resultaten från formsearch-service och itererar tablerows ---  
+    echo '<div style= "display:inline-block">';
     echo '<table>';
     foreach($rows as $row){
         echo "<tr>
@@ -66,22 +102,21 @@ if (isset($_POST['user_formsearch'])){
             </tr>";
     }
     echo '</table>';
-    
+    echo '</div>';  
 }
-echo '</div>';
 //--- form-sökresultat tabell slut
-echo '<div style= "display:inline-block">';
-echo '<form action="applikationtest.php" method=post>
-    <input type="search" name="user_boksearch" value="" placeholder="sök efter former">
-    <input type="submit" value="sök">
-    </form>';
+
 //---  Kollar om user_boksearch är satt och Skickar http request till formsearch-service  ---
 if (isset($_POST['user_boksearch'])){
     $url="http://localhost/bokningsearch-service.php?user_boksearch=".$_POST['user_boksearch'];
     $jsontext = file_get_contents($url);
     $rows = json_decode($jsontext);
+    //--- Loggar Bokningen med sessionID och handling ---
+    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+    $jsontext2 =file_get_contents($url2);
 
-//--- Ekar ut resultaten från bokningsearch-service och itererar tablerows ---    
+    //--- Ekar ut resultaten från bokningsearch-service och itererar tablerows ---  
+    echo '<div style= "display:inline-block">';
     echo '<table>';
     foreach($rows as $row){
         echo "<tr>
@@ -93,37 +128,46 @@ if (isset($_POST['user_boksearch'])){
             </tr>";
     }
     echo '</table>';
-    
+    echo '</div>';
 }
-echo '</div>';
 // bokning-sökresultat tabell slut
 
 //---  Kollar om avbokningsobj är satt och Skickar http request till AvBokning-service  ---
 if(isset($_POST['avbokningsobj'])){
     $url="http://localhost/AvBokning-service.php?avbokningsobj=".$_POST['avbokningsobj'];
     $jsontext = file_get_contents($url);
-    //print_r($_POST);
-    //echo $url.' '.$jsontext;
+
+    //--- Loggar Bokningen med sessionID och handling ---
+    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+    $jsontext2 =file_get_contents($url2);
+
 }
 //--- Hämtar Bokningarna från bokadeForms ---
-$url="http://localhost/bokadeForms.php";
-$jsontext = file_get_contents($url);
-$rows = json_decode($jsontext);
-echo '<div style="display:inline-block;margin-left:1000px;">';
-echo '<table>';
-//--- Ekar ut resultaten från bokadeForms och itererar tablerows ---   
-foreach($rows as $row){
-    echo "<tr>
-        <form action='applikationtest.php' method=post>
-            <td><input type='text' name='avbokningsobj' value='$row->idBokning' readonly ></td>
-            <td>$row->idForms</td>
-            <td><input type='submit' value='avboka'></td>
-        </form>
-        </tr>";
-        
+if(isset($_POST['visaBokningar'])){
+    $url="http://localhost/bokadeForms.php";
+    $jsontext = file_get_contents($url);
+    $rows = json_decode($jsontext);
+
+    //--- Loggar Bokningen med sessionID och handling ---
+    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+    $jsontext2 =file_get_contents($url2);
+
+    //--- Ekar ut resultaten från bokadeForms och itererar tablerows ---   
+    echo '<div style="display:inline-block;">';
+    echo '<table>';
+    foreach($rows as $row){
+        echo "<tr>
+            <form action='applikationtest.php' method=post>
+                <td><input type='text' name='avbokningsobj' value='$row->idBokning' readonly ></td>
+                <td>$row->idForms</td>
+                <td><input type='submit' value='avboka'></td>
+            </form>
+            </tr>";
+            
+    }
+    echo '</table>';
+    echo '</div>';
 }
-echo '</table>';
-echo '</div>';
 // bokadeForms tabell slut
 ?>
 </body>
