@@ -1,4 +1,4 @@
-<?php
+<?php/*
 header('Content-Type: application/json');
 include_once 'database.php';
 
@@ -9,5 +9,5 @@ $sql = "SELECT * FROM forms";
 $result = $conn->query($sql);
 $row = $result ->fetchall(PDO::FETCH_ASSOC);
 
-echo json_encode($row);
+echo json_encode($row);*/
 ?>

@@ -8,6 +8,7 @@
 </head>
 <body>
 <?php
+$mongo = 1;
 session_start();
 $SID= session_id();
 print_r (session_ID());
@@ -38,24 +39,37 @@ echo '</form>';
 
 //---  Kollar om bokningsobj är satt och Skickar http request till bokning-service  ---
 if(isset($_POST['bokningsobj'])){
-    $url="http://localhost/Bokning-service.php?bokningsobj=".$_POST['bokningsobj'];
-    $jsontext = file_get_contents($url);
+    if($mongo=0){
+        $url="http://localhost/Bokning-service.php?bokningsobj=".$_POST['bokningsobj'];
+        $jsontext = file_get_contents($url);
 
-    //--- Loggar Bokningen med sessionID och handling ---
-    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
-    $jsontext2 =file_get_contents($url2);    
+        //--- Loggar Bokningen med sessionID och handling ---
+        $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+        $jsontext2 =file_get_contents($url2);
+    }
+    elseif($mongo=1){
+        $url="http://localhost/Mongo-bokning-service.php?bokningsobj=".$_POST['bokningsobj'];
+        $jsontext = file_get_contents($url);
+    }    
 }
 
 //--- Hämtar Formerna från formservice ---
 if (isset($_POST['visaFormer'])){
-    $url="http://localhost/form-service.php";
-    $jsontext = file_get_contents($url);
-    $rows = json_decode($jsontext);
 
-    //--- Loggar Bokningen med sessionID och handling ---
-    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
-    $jsontext2 =file_get_contents($url2);
+    if($mongo==0){
+        $url="http://localhost/form-service.php";
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
 
+        //--- Loggar Bokningen med sessionID och handling ---
+        $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+        $jsontext2 =file_get_contents($url2);
+    }
+    elseif($mongo==1){
+        $url="http://localhost/Mongo-form-service.php";
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
+    }
     //--- Ekar ut resultaten från formservice och itererar tablerows ---
     echo '<div style= "display:inline">';
     echo '<table>';
@@ -79,14 +93,22 @@ if (isset($_POST['visaFormer'])){
 
 //---  Kollar om user_formsearch är satt och Skickar http request till formsearch-service  ---
 if (isset($_POST['user_formsearch'])){
-    $url="http://localhost/formsearch-service.php?user_formsearch=".$_POST['user_formsearch'];
-    $jsontext = file_get_contents($url);
-    $rows = json_decode($jsontext);
 
-    //--- Loggar Bokningen med sessionID och handling ---
-    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
-    $jsontext2 =file_get_contents($url2);
+    if($mongo=0){
+        $url="http://localhost/formsearch-service.php?user_formsearch=".$_POST['user_formsearch'];
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
 
+        //--- Loggar Bokningen med sessionID och handling ---
+        $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+        $jsontext2 =file_get_contents($url2);
+    }
+    elseif($mongo=1){
+        $url="http://localhost/Mongo-formsearch-service.php?user_formsearch=".$_POST['user_formsearch'];
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
+
+    }
     //--- Ekar ut resultaten från formsearch-service och itererar tablerows ---  
     echo '<div style= "display:inline-block">';
     echo '<table>';
@@ -108,13 +130,20 @@ if (isset($_POST['user_formsearch'])){
 
 //---  Kollar om user_boksearch är satt och Skickar http request till formsearch-service  ---
 if (isset($_POST['user_boksearch'])){
-    $url="http://localhost/bokningsearch-service.php?user_boksearch=".$_POST['user_boksearch'];
-    $jsontext = file_get_contents($url);
-    $rows = json_decode($jsontext);
-    //--- Loggar Bokningen med sessionID och handling ---
-    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
-    $jsontext2 =file_get_contents($url2);
+    if($mongo=0){
+        $url="http://localhost/bokningsearch-service.php?user_boksearch=".$_POST['user_boksearch'];
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
+        //--- Loggar Bokningen med sessionID och handling ---
+        $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+        $jsontext2 =file_get_contents($url2);
+    }
+    elseif($mongo=1){
+        $url="http://localhost/Mongo-bokningsearch-service.php?user_boksearch=".$_POST['user_boksearch'];
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
 
+    }
     //--- Ekar ut resultaten från bokningsearch-service och itererar tablerows ---  
     echo '<div style= "display:inline-block">';
     echo '<table>';
@@ -144,25 +173,36 @@ if(isset($_POST['avbokningsobj'])){
 }
 //--- Hämtar Bokningarna från bokadeForms ---
 if(isset($_POST['visaBokningar'])){
-    $url="http://localhost/bokadeForms.php";
-    $jsontext = file_get_contents($url);
-    $rows = json_decode($jsontext);
+    if($mongo=0){
+        $url="http://localhost/bokadeForms.php";
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
 
-    //--- Loggar Bokningen med sessionID och handling ---
-    $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
-    $jsontext2 =file_get_contents($url2);
-
+        //--- Loggar Bokningen med sessionID och handling ---
+        $url2="http://localhost/loggning.php?url=".$url. "&SID=".$SID;
+        $jsontext2 =file_get_contents($url2);
+    }
+    elseif($mongo=1){
+        $url="http://localhost/Mongo-bokningar-service.php";
+        $jsontext = file_get_contents($url);
+        $rows = json_decode($jsontext);
+    }
     //--- Ekar ut resultaten från bokadeForms och itererar tablerows ---   
     echo '<div style="display:inline-block;">';
     echo '<table>';
     foreach($rows as $row){
-        echo "<tr>
-            <form action='applikationtest.php' method=post>
-                <td><input type='text' name='avbokningsobj' value='$row->idBokning' readonly ></td>
-                <td>$row->idForms</td>
-                <td><input type='submit' value='avboka'></td>
-            </form>
-            </tr>";
+        echo '<tr>';
+        echo '<form action="applikationtest.php" method=post>';
+        if (isset($row->idBokning) && $mongo=0){   
+            echo '<td><input type="text" name="avbokningsobj" value="'.$row->idBokning.'" readonly ></td>';
+        }elseif (isset($row->_id) && $mongo=1){
+            $array = json_decode(json_encode($row->_id),true);
+            echo '<td><input type="text" name="avbokningsobj" value="'.$array['$oid'].'" readonly ></td>';
+        }
+        echo '<td>'.$row->idForms.'</td>';
+        echo '<td><input type="submit" value="avboka"></td>';
+        echo '</form>';
+        echo '</tr>';
             
     }
     echo '</table>';
